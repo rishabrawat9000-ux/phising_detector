@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Phishing URL Detector</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <div class="badge">
+                ML SECURITY TOOL
+            </div>
+
+            <h1>Phishing URL Detector</h1>
+
+            <p class="subtitle">
+                Enter a URL to check whether it is potentially
+                phishing using a machine-learning model.
+            </p>
+
+            <form method="POST">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="url"
+                        placeholder="https://example.com"
+                        value="{{ url }}"
+                        required
+                    >
+
+                    <button type="submit">
+                        Scan URL
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            {% if error %}
+
+            <div class="result error">
+
+                <div class="icon">!</div>
+
+                <div>
+                    <h2>Error</h2>
+                    <p>{{ error }}</p>
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if result == "phishing" %}
+
+            <div class="result phishing">
+
+                <div class="icon">!</div>
+
+                <div class="result-content">
+
+                    <h2>Potential Phishing URL</h2>
+
+                    <p>
+                        The model classified this URL as
+                        potentially malicious.
+                    </p>
+
+                    {% if confidence is not none %}
+                    <div class="confidence">
+                        <span>Model probability</span>
+                        <strong>
+                            {{ "%.2f"|format(confidence) }}%
+                        </strong>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% elif result == "legitimate" %}
+
+            <div class="result legitimate">
+
+                <div class="icon">✓</div>
+
+                <div class="result-content">
+
+                    <h2>Likely Legitimate</h2>
+
+                    <p>
+                        The model did not classify this URL
+                        as phishing.
+                    </p>
+
+                    {% if confidence is not none %}
+                    <div class="confidence">
+                        <span>Model probability</span>
+                        <strong>
+                            {{ "%.2f"|format(confidence) }}%
+                        </strong>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <p class="disclaimer">
+                This is an automated machine-learning prediction.
+                It does not guarantee that a website is safe.
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
